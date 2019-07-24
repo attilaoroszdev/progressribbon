@@ -74,14 +74,6 @@ import androidx.annotation.StringRes;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * ToDo:
- *  - Fix marginSetAsPercentage. This should not be mixed (top and bottoms margins are either both percent vales or striaght units).
- *    Also, setting both bottom and top margin makes no sens,e so thisese could be exclusive
- *  - Implement autoHide timer for anonymous "newInstance" fixed time Ribbons (as if that makes any sense);
- *  - mprove JavaDoc to use HTML tags and @link-s and all the fancy stuff
- *
- */
 
 public class ProgressRibbon extends FrameLayout {
 
@@ -1618,7 +1610,6 @@ public class ProgressRibbon extends FrameLayout {
      * cases it works differently, as it will not really traverse the view-tree to find one that is explicitly set
      * (as in INHERIT), but checks the layout direction in the configuraton (i.e. what is the basic system setting), and apply
      * it to the view. This breaks inheritence, but since we are not necessarily attached yet, needed a sane default.
-     * ToDo: Change this to actually allow for proper inheritence
      *
      * @param layoutDirection the layoutDirection as ni android. only LTR and RTL do anyting effieftively, otherwise system config value will apply
      */
@@ -2645,7 +2636,7 @@ public class ProgressRibbon extends FrameLayout {
             DEFAULT_RIBBON_BORDER_COLOR = resolveAppThemeColour(android.R.attr.colorPrimary); //Should pull it in frrom the host app, if non found, use our own default
             DEFAULT_RIBBON_TEXT_COLOR = resolveAppThemeColour(android.R.attr.textColorPrimary); //Pretty much the same across devices, but shoudl conform to the app's settings if differen
             DEFAULT_RIBBON_TEXT_SIZE = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, context.getResources().getDisplayMetrics())); //Decent enough text size
-            DEFAULT_RIBBON_BG_COLOR = context.getResources().getColor(android.R.color.white); //ToDo: this shoudl eb more dynamic to allow for night mode and stuff
+            DEFAULT_RIBBON_BG_COLOR = context.getResources().getColor(android.R.color.white); //White default is limited in scope. An isue is open to change this
             DEFAULT_RIBBON_MARGIN=0; //No margin for old man
             DEFAULT_RIBBON_HIDE_DELAY=0; //Delays should be set when needed
             DEFAULT_RIBBON_SHOW_DELAY=0; //Delays should be set when needed
