@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ProgressRibbon v1.0
+  ~
+  ~ Copyright (c) 2019 Attila Orosz
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+  ~ associated documentation files (the "Software"), to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do
+  ~ so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial
+  ~ portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  ~ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+  ~ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+  ~ THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<resources>
+    <declare-styleable name="ProgressRibbon">
+        <attr name="showDelay" format="integer" />
+        <attr name="hideDelay" format="integer" />
+        <attr name="progressText" format="string" />
+        <attr name="isIndeterminate" format="boolean" />
+        <attr name="min" format="integer" />
+        <attr name="max" format="integer" />
+        <attr name="progress" format="integer" />
+        <attr name="ribbonElevation" format="dimension" />
+        <attr name="ribbonBackgroundColor" format="color" />
+        <attr name="blockUnderlyingViews" format="boolean" />
+        <attr name="progressBarType" format="integer">
+            <enum name="round" value="0" />
+            <enum name="horizontal" value="1" />
+        </attr>
+        <attr name="animationDuration" format="integer" />
+        <attr name="animationType" format="integer">
+            <enum name="none" value="0" />
+            <enum name="fade" value="1" />
+            <enum name="scale" value="2" />
+            <enum name="fade_scale" value="3" />
+        </attr>
+        <attr name="ribbonPadding" format="dimension" />
+        <attr name="ribbonPaddingTop" format="dimension" />
+        <attr name="ribbonPaddingBottom" format="dimension" />
+        <attr name="textBesideProgressBar" format="boolean" />
+        <attr name="doNotShowOnAttach" format="boolean" />
+        <attr name="ribbonMarginTop" format="dimension" />
+        <attr name="ribbonMarginBottom" format="dimension" />
+        <attr name="ribbonMarginPercentTop" format="integer" />
+        <attr name="ribbonMarginPercentBottom" format="integer" />
+        <attr name="reportProgressAsMaxPercent" format="boolean" />
+        <attr name="dialogueMode" format="boolean" />
+        <attr name="borderless" format="boolean" />
+        <attr name="borderThickness" format="dimension" />
+        <attr name="borderColor" format="color" />
+        <attr name="borderRadius" format="float" />
+        <attr name="progressTextSize" format="dimension" />
+        <attr name="progressTextColor" format="color" />
+        <attr name="progressTextStyle" format="integer">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+            <enum name="bold_italic" value="3" />
+        </attr>
+        <attr name="progressTextTypeFace" format="integer">
+            <enum name="normal" value="0" />
+            <enum name="monospace" value="1" />
+            <enum name="serif" value="2" />
+            <enum name="sans_serif" value="3" />
+        </attr>
+
+    </declare-styleable>
+</resources>
