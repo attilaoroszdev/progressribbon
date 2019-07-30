@@ -1734,6 +1734,46 @@ public class ProgressRibbon extends FrameLayout {
         }
     }
 
+
+    /**
+     * Set the seconrady progress for the Ribbon
+     * @param secondaryProgress the secondary progress value
+     */
+
+    public void setSecondaryProgress(@IntRange(from=0) int secondaryProgress){
+        if(ribbonData.progressBarStyle==BAR_HORIZONTAL) {
+            if (secondaryProgress > ribbonData.min) {
+                ribbonData.secondaryProgress = secondaryProgress;
+
+                if (!isProgressFrozen) {
+                    progressBar.setSecondaryProgress(secondaryProgress);
+                }
+
+            } else {
+                ribbonData.secondaryProgress = ribbonData.min;
+                progressBar.setSecondaryProgress(ribbonData.progress);
+            }
+        } else {
+            Log.e("ProgressRibbon", "This feature (setSecondaryProgress) is not yet implemented for round determinate ProgressRibbon");
+        }
+    }
+
+    /**
+     * Same as ProgressBar incrementProgressby. It will  increments progress by
+     * @param diff int to increment progress by
+     */
+    public void incrementProgressBy(@IntRange(from=0) int diff){
+        progressBar.incrementProgressBy(diff);
+    }
+
+    /**
+     * Same as ProgressBar incrementSecondaryProgressby. It will  increments secondary progress by
+     * @param diff int to increment progress by
+     */
+    public void incrementSecondaryProgressBy(@IntRange(from=0) int diff){
+        progressBar.incrementSecondaryProgressBy(diff);
+    }
+
     /**
      * Can set whether to return progress as a percent of the currrent max value, or as a raw number
      * @param value boolean flagh
@@ -1766,6 +1806,15 @@ public class ProgressRibbon extends FrameLayout {
     }
 
     /**
+     * Passes through the ProgressBar's secondary progress value, if there is any
+     *
+     * @return the secondary progress value as an integer
+     */
+    public int getSecondaryProgress(){
+        return progressBar.getSecondaryProgress();
+    }
+
+    /**
      * To see (in code) whether the Ribbon is showing ort not
      * @return a boolean that tells you the same
      */
@@ -1781,14 +1830,6 @@ public class ProgressRibbon extends FrameLayout {
      */
     private int getProgressPercentage(){
         return (progressBar.getProgress()*100)/ribbonData.max;
-    }
-
-    /**
-     * Same as ProgressBar incrementProgressby. It will  increments progress by
-     * @param diff int to increment progress by
-     */
-    public void incrementProgressBy(@IntRange(from=0) int diff){
-        progressBar.incrementProgressBy(diff);
     }
 
     /**
@@ -2342,6 +2383,7 @@ public class ProgressRibbon extends FrameLayout {
         bundle.putInt("min", ribbonData.min);
         bundle.putInt("max", ribbonData.max);
         bundle.putInt("progress", ribbonData.progress);
+        bundle.putInt("secondaryProgress", ribbonData.secondaryProgress);
         bundle.putInt("ribbonMarginTop", ribbonData.ribbonMarginTop);
         bundle.putInt("ribbonMarginBottom", ribbonData.ribbonMarginBottom);
         bundle.putInt("ribbonBorderSize", ribbonData.ribbonBorderSize);
@@ -2395,6 +2437,7 @@ public class ProgressRibbon extends FrameLayout {
             ribbonData.min=bundle.getInt("min");
             ribbonData.max=bundle.getInt("max");
             ribbonData.progress=bundle.getInt("progress");
+            ribbonData.secondaryProgress=bundle.getInt("secondaryProgress");
             ribbonData.progressBarStyle =bundle.getInt("progressBarStyle");
             ribbonData.animationDuration=bundle.getInt("animationDuration");
             ribbonData.animationType=bundle.getInt("animationType");
@@ -2605,6 +2648,7 @@ public class ProgressRibbon extends FrameLayout {
         private int min;
         private int max;
         private int progress;
+        private int secondaryProgress;
         private int progressBarStyle;
         private int animationDuration;
         private int animationType;
@@ -2654,6 +2698,7 @@ public class ProgressRibbon extends FrameLayout {
 
             min = DEFAULT_RIBBON_MIN;
             progress = min;
+            secondaryProgress=min;
             max = DEFAULT_RIBBON_MAX;
             backgroundColor= DEFAULT_RIBBON_BG_COLOR;
             progressBarStyle = BAR_ROUND;
