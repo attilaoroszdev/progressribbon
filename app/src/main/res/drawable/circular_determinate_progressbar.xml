@@ -22,28 +22,46 @@
   -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
+    <item android:id="@+id/background">
         <shape
             android:shape="ring"
             android:thicknessRatio="2.5"
             android:thickness="4dp"
-            android:useLevel="false">
-            <solid android:color="#DDDDDD"/>
+            android:useLevel="false"
+            android:tint="@color/progressBarGrey">
+            <solid android:color="@color/semi_transparent_white"/>
         </shape>
     </item>
-    <item>
+    <item android:id="@+id/secondaryProgress">
         <rotate
             android:fromDegrees="270"
             android:toDegrees="270"
             android:pivotX="50%"
-            android:pivotY="50%">
+            android:pivotY="50%"
+            android:useLevel="true">
             <shape
                 android:shape="ring"
                 android:thicknessRatio="2.5"
                 android:thickness="4dp"
-                android:useLevel="true">
-                <solid android:color="?attr/colorControlActivated"/>
+                android:tint="?attr/colorControlActivated">
+                <solid android:color="@color/semi_transparent_white"/>
             </shape>
         </rotate>
-    </item>-->
+    </item>
+    <item android:id="@+id/progress">
+        <rotate
+            android:fromDegrees="270"
+            android:toDegrees="270"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:useLevel="true">
+            <shape
+                android:shape="ring"
+                android:thicknessRatio="2.5"
+                android:thickness="4dp"
+                android:tint="?attr/colorControlActivated">
+                <solid android:color="@android:color/white"/>
+            </shape>
+        </rotate>
+    </item>
 </layer-list>

@@ -79,6 +79,9 @@ public class ProgressRibbon extends FrameLayout {
 
     /**************************************Constants************************************************/
 
+    //Taken frm the original ProgressBar
+    private static final int MAX_LEVEL = 10000;
+
     /**
      * Plain ole' integers holding values described by their names
      */
@@ -1736,26 +1739,52 @@ public class ProgressRibbon extends FrameLayout {
 
 
     /**
-     * Set the seconrady progress for the Ribbon
+     * Set the seconrady progress for the Ribbon,
      * @param secondaryProgress the secondary progress value
      */
-
     public void setSecondaryProgress(@IntRange(from=0) int secondaryProgress){
-        if(ribbonData.progressBarStyle==BAR_HORIZONTAL) {
-            if (secondaryProgress > ribbonData.min) {
-                ribbonData.secondaryProgress = secondaryProgress;
 
-                if (!isProgressFrozen) {
-                    progressBar.setSecondaryProgress(secondaryProgress);
-                }
+        if (secondaryProgress > ribbonData.min) {
+            ribbonData.secondaryProgress = secondaryProgress;
+        } else {
+            ribbonData.secondaryProgress = ribbonData.min;
+        }
+
+        if (!isProgressFrozen) {
+            if (ribbonData.progressBarStyle == BAR_HORIZONTAL) {
+                progressBar.setSecondaryProgress(ribbonData.secondaryProgress);
 
             } else {
-                ribbonData.secondaryProgress = ribbonData.min;
-                progressBar.setSecondaryProgress(ribbonData.progress);
+                // ProgressRibbon does not know out special drawable and it will not
+                // recognise the levels set in it even with the right ids, so we need
+                // to get creative
+                updateCircularSecondaryProgress();
             }
-        } else {
-            Log.e("ProgressRibbon", "This feature (setSecondaryProgress) is not yet implemented for round determinate ProgressRibbon");
         }
+    }
+
+
+    /**
+     * This method combines those from the super class that dot he same job,only corrrectly applying the
+     * secondary progress to our special round drawable
+     */
+    private void updateCircularSecondaryProgress(){
+        Drawable d = progressBar.getProgressDrawable();
+
+        int range = ribbonData.max - ribbonData.min;
+        final float scale = range > 0 ? (ribbonData.secondaryProgress - ribbonData.min) / (float) range : 0;
+
+        if (d instanceof LayerDrawable) {
+            d = ((LayerDrawable) d).findDrawableByLayerId(R.id.secondaryProgress);
+        }
+
+        if (d != null) {
+            final int level = (int) (scale * MAX_LEVEL);
+            d.setLevel(level);
+        } else {
+            invalidate();
+        }
+
     }
 
     /**
@@ -1771,7 +1800,8 @@ public class ProgressRibbon extends FrameLayout {
      * @param diff int to increment progress by
      */
     public void incrementSecondaryProgressBy(@IntRange(from=0) int diff){
-        progressBar.incrementSecondaryProgressBy(diff);
+        ribbonData.secondaryProgress+=diff;
+        updateCircularSecondaryProgress();
     }
 
     /**
@@ -1806,12 +1836,12 @@ public class ProgressRibbon extends FrameLayout {
     }
 
     /**
-     * Passes through the ProgressBar's secondary progress value, if there is any
+     * Returns secondary progress value, if there is any
      *
      * @return the secondary progress value as an integer
      */
     public int getSecondaryProgress(){
-        return progressBar.getSecondaryProgress();
+        return ribbonData.secondaryProgress;
     }
 
     /**

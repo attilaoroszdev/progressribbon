@@ -25,4 +25,5 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorAccent">#D81B60</color>
     <color name="textColorPrimary">#222222</color>
+    <color name="progressBarGrey">#B3B3B3</color>
 </resources>
