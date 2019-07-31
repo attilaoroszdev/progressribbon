@@ -1763,12 +1763,11 @@ public class ProgressRibbon extends FrameLayout {
         }
     }
 
-
     /**
      * This method combines those from the super class that dot he same job,only corrrectly applying the
      * secondary progress to our special round drawable
      */
-    private void updateCircularSecondaryProgress(){
+    private synchronized void updateCircularSecondaryProgress(){
         Drawable d = progressBar.getProgressDrawable();
 
         int range = ribbonData.max - ribbonData.min;
