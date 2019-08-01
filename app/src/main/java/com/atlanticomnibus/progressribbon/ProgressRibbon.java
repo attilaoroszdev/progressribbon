@@ -59,6 +59,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -347,7 +348,7 @@ public class ProgressRibbon extends FrameLayout {
             ribbonData.isIndeterminate=a.getBoolean(R.styleable.ProgressRibbon_isIndeterminate, true);
             ribbonData.min=a.getInteger(R.styleable.ProgressRibbon_min, ribbonData.DEFAULT_RIBBON_MIN);
             ribbonData.max=a.getInteger(R.styleable.ProgressRibbon_max, ribbonData.DEFAULT_RIBBON_MAX);
-            ribbonData.progress=a.getInteger(R.styleable.ProgressRibbon_progress, 0);
+            ribbonData.progress=a.getInteger(R.styleable.ProgressRibbon_ribbonProgress, 0);
             ribbonData.backgroundColor=a.getColor(R.styleable.ProgressRibbon_ribbonBackgroundColor,ribbonData.DEFAULT_RIBBON_BG_COLOR);
             ribbonData.blocksUnderlying =a.getBoolean(R.styleable.ProgressRibbon_blockUnderlyingViews, false);
             ribbonData.progressBarStyle =a.getInteger(R.styleable.ProgressRibbon_progressBarType, BAR_ROUND);
