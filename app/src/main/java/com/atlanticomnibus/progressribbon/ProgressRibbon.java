@@ -504,6 +504,7 @@ public class ProgressRibbon extends FrameLayout {
         progressBar.setId(PROGRESS_BAR_ID);
 
         ribbonContainer.addView(progressBar, 0);
+
     }
 
     /**
@@ -1291,9 +1292,8 @@ public class ProgressRibbon extends FrameLayout {
      * Called when Ribbon nis initially set or when dialogue mode is toggled.
      */
     private ProgressRibbon setRibbonBorders(){
-        int currentPaddingLeft=getPaddingLeft();
-        int currentPaddingRight=getPaddingRight();
 
+        int ribbonSidePadding=0;
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) ribbonContainer.getLayoutParams();
 
         if(ribbonData.isInDialogueMode){
@@ -1302,24 +1302,19 @@ public class ProgressRibbon extends FrameLayout {
             int sideMargin=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
             params.leftMargin=sideMargin;
             params.rightMargin=sideMargin;
-            ribbonContainer.setPadding(ribbonData.ribbonBorderSize, ribbonContainer.getPaddingTop(), ribbonData.ribbonBorderSize, ribbonContainer.getPaddingBottom());
+            ribbonSidePadding=ribbonData.ribbonBorderSize;
+            ribbonContainer.invalidate();
         } else {
             LayerDrawable bg= (LayerDrawable) ContextCompat.getDrawable(getContext(), R.drawable.ribbon_default_bg);
             ribbonContainer.setBackground(bg);
             params.leftMargin=0;
             params.rightMargin=0;
-            ribbonContainer.setPadding(0, ribbonContainer.getPaddingTop(), 0, ribbonContainer.getPaddingBottom());
         }
 
+        ribbonContainer.setPadding(ribbonSidePadding, ribbonContainer.getPaddingTop(), ribbonSidePadding, ribbonContainer.getPaddingBottom());
         setBorderColor(ribbonData.ribbonBorderColor);
         setRibbonBackgroundColor();
         setRibbonBorderSize();
-
-        /**
-         * Side effect of changing background: All paddings are lost. Need to restore to whatever they were just before
-         */
-        ribbonContainer.setPadding(currentPaddingLeft, ribbonData.ribbonPaddingTop, currentPaddingRight, ribbonData.ribbonPaddingBottom);
-
 
         if(ribbonData.isInDialogueMode) {
             setRibbonBorderRadius();
@@ -2710,7 +2705,7 @@ public class ProgressRibbon extends FrameLayout {
             DEFAULT_RIBBON_BORDER_COLOR = resolveAppThemeColour(android.R.attr.colorPrimary); //Should pull it in frrom the host app, if non found, use our own default
             DEFAULT_RIBBON_TEXT_COLOR = resolveAppThemeColour(android.R.attr.textColorPrimary); //Pretty much the same across devices, but shoudl conform to the app's settings if differen
             DEFAULT_RIBBON_TEXT_SIZE = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, context.getResources().getDisplayMetrics())); //Decent enough text size
-            DEFAULT_RIBBON_BG_COLOR = context.getResources().getColor(android.R.color.white); //White default is limited in scope. An isue is open to change this
+            DEFAULT_RIBBON_BG_COLOR = resolveAppBackgroundColour(context);//context.getResources().getColor(android.R.color.white); //White default is limited in scope. An isue is open to change this
             DEFAULT_RIBBON_MARGIN=0; //No margin for old man
             DEFAULT_RIBBON_HIDE_DELAY=0; //Delays should be set when needed
             DEFAULT_RIBBON_SHOW_DELAY=0; //Delays should be set when needed
@@ -2722,6 +2717,21 @@ public class ProgressRibbon extends FrameLayout {
             if(setDefaults) {
                 applyDefaults();
             }
+        }
+
+        private int resolveAppBackgroundColour(Context context){
+            int color=0;
+
+            TypedValue tv = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.windowBackground, tv, true);
+            if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                color = tv.data;
+            } else {
+                //It's not a colour (might be a drawable, so we default to white)
+                context.getResources().getColor(android.R.color.white);
+            }
+
+            return color;
         }
 
         public void applyDefaults(){
