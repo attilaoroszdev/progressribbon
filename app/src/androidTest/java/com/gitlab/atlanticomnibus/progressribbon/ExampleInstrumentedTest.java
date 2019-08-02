@@ -1,6 +1,7 @@
-package com.atlanticomnibus.progressribbon;
+package com.gitlab.atlanticomnibus.progressribbon;
 
 import android.content.Context;
+
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;

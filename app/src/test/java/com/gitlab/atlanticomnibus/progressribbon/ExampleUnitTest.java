@@ -1,4 +1,4 @@
-package com.atlanticomnibus.progressribbon;
+package com.gitlab.atlanticomnibus.progressribbon;
 
 import org.junit.Test;
 

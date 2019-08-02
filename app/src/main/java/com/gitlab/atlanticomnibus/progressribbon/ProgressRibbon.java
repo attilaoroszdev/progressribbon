@@ -20,7 +20,7 @@
  * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.atlanticomnibus.progressribbon;
+package com.gitlab.atlanticomnibus.progressribbon;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -59,21 +59,23 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.ViewCompat;
-import androidx.constraintlayout.widget.ConstraintLayout;
-//import androidx.constraintlayout.widget.ConstraintSet; //In case you'd uncomment the right code in the right place (will not tell you where, hehe):
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+//import androidx.constraintlayout.widget.ConstraintSet; //In case you'd uncomment the right code in the right place (will not tell you where, hehe):
 
 
 public class ProgressRibbon extends FrameLayout {
@@ -486,7 +488,7 @@ public class ProgressRibbon extends FrameLayout {
     }
 
     /**
-     * <p>Inflates {@link ProgressRibbon} compound {@link View}s from their default layout file {@link com.atlanticomnibus.progressribbon.R.layout#progress_ribbon}</p>
+     * <p>Inflates {@link ProgressRibbon} compound {@link View}s from their default layout file {@link com.gitlab.atlanticomnibus.progressribbon.R.layout#progress_ribbon}</p>
      *
      * @param context Of the many meanings of the word "context", I'll let you choose the one that suits this here
      */
