@@ -42,6 +42,7 @@ They say that a picture is worth more than a thousand words. So here's a short n
 
 #### JFrog Bintray
 
+[ ![Download](https://api.bintray.com/packages/atlantic-omnibus/androidosslibs/progressribbon/images/download.svg) ](https://bintray.com/atlantic-omnibus/androidosslibs/progressribbon/_latestVersion)
 
 #### Jcenter
 
