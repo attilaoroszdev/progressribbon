@@ -96,6 +96,7 @@ dependencies {
     app:animationDuration="400"
     app:dialogueMode="true" />
 ```
+<br />
 
 **Create a `ProgressRibbon` in Java code, which is not attached to any `ViewGroup` (orphan, attaches to Window)**
 
@@ -117,6 +118,8 @@ ProgressRibbon progressRibbon = ProgressRibbon.newInstance()
               
 ```
 
+<br />
+
 **Create a `ProgressRibbon` with the default constructor** 
 
 ```Java              
@@ -135,6 +138,8 @@ progressRibbon.setIndeterminateState(ProgressRibbon.DETERMINATE)
     .setAnimationDuration(400)
     .setRibbonInDialogueMode(true);
 ```
+
+<br />
 
 **Using your `ProgressRibbon`**
 
@@ -175,7 +180,9 @@ progressRibbon.hideNoDelay();
 progressRibbon.removeDynamicRibbon();
 ```
 
-**Other methods to change the appearance/behaviour if the ProgressRibbon.**
+<br />
+
+**Other methods to change the appearance/behaviour of the `ProgressRibbon`.**
 
 ```XML
     ...
@@ -192,6 +199,7 @@ progressRibbon.removeDynamicRibbon();
     />
 ```
 
+<br />
 
 ```Java
 progressRibbon
@@ -207,6 +215,7 @@ progressRibbon
     .setProgressTextColour("#0000FF")
     .setProgressTextSize(22);
 ```
+<br />
 
 For more details about these and **even more** available methods, refer to the Wiki.
 
