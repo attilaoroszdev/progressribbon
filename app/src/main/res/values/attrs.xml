@@ -56,6 +56,7 @@
         <attr name="reportProgressAsMaxPercent" format="boolean" />
         <attr name="dialogueMode" format="boolean" />
         <attr name="borderless" format="boolean" />
+        <attr name="transparent" format="boolean" />
         <attr name="borderThickness" format="dimension" />
         <attr name="borderColor" format="color" />
         <attr name="borderRadius" format="float" />

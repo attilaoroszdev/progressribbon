@@ -36,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                tools:text="Progress text placeholder"
-                android:layout_below="@+id/drawables_container" />
+                tools:text="Progress text placeholder" />
         </LinearLayout>
 </merge>
