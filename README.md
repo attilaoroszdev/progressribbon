@@ -2,6 +2,13 @@
 
 A Free and Open Source, heavily customisable compound Android widget to better display progress.
 
+Why another widget? Because Google's design guidelines (the reasoning behind deprecating ProgressDialog) are not always sound (Think abut the UX disaster the Floatng Action Button is).
+In the real world, there *are* usecases when you want a load/progress indicator *should* block the underlying layout. or just visually draw over, without blocking. besides, show/hide delays should 
+be an integral part of any load/progress indicator, since you will not always know upfront whether you will even need one.
+
+Sprinkle in some useful, and some less useful, plus some very convenient functionality, and you get... the `ProgressRibbon`! :) (*Yay.*) 
+
+
 ### Features
 
 ProgressRibbon is an extremely customisable compound widget, that combines a `ProgressBar` and a `TextView `in one convenient package, expanding the functionality of both.
