@@ -129,61 +129,61 @@ public class ProgressRibbon extends FrameLayout {
     /** @hide */
     @IntDef({BAR_ROUND, BAR_HORIZONTAL})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ProgressStyle{}
+    private @interface ProgressStyle{}
 
     /** @hide */
     @IntDef({FREEZE_PROGRESS, UNFREEZE_PROGRESS})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ProgressFrozen{}
+    private @interface ProgressFrozen{}
 
     /** @hide */
     @IntDef({INDETERMINATE, DETERMINATE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface IndetermiateState{}
+    private @interface IndetermiateState{}
 
     /** @hide */
     @IntDef({TEXT_BESIDE_BAR, TEXT_UNDER_BAR})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TextPosition{}
+    private @interface TextPosition{}
 
     /** @hide */
     @IntDef({ANIMATION_SHOW, ANIMATION_HIDE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface AnimationDirection{}
+    private @interface AnimationDirection{}
 
     /** @hide */
     @IntDef({ANIMATE_FADE, ANIMATE_SCALE, ANIMATE_SCALE_FADE, DO_NOT_ANIMATE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface AnimationType{}
+    private @interface AnimationType{}
 
     /** @hide */
     @IntDef({MARGIN_BOTTOM, MARGIN_TOP})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface RibbonMarginPosition{}
+    private @interface RibbonMarginPosition{}
 
     /** @hide */
     @IntDef({PADDING_BOTTOM, PADDING_TOP})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface RibbonPaddingPosition{}
+    private @interface RibbonPaddingPosition{}
 
     /** @hide */
     @IntDef({TypedValue.COMPLEX_UNIT_PX, TypedValue.COMPLEX_UNIT_DIP, TypedValue.COMPLEX_UNIT_SP,
             TypedValue.COMPLEX_UNIT_PT, TypedValue.COMPLEX_UNIT_IN, TypedValue.COMPLEX_UNIT_MM})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ValidSizeUnit{}
+    private @interface ValidSizeUnit{}
 
     /** @hide */
     @IntDef({TypedValue.COMPLEX_UNIT_PX, TypedValue.COMPLEX_UNIT_DIP, TypedValue.COMPLEX_UNIT_SP,
             TypedValue.COMPLEX_UNIT_PT, TypedValue.COMPLEX_UNIT_IN, TypedValue.COMPLEX_UNIT_MM,
             PARENT_HEIGHT_PERCENT})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface RibbonMarginUnit{}
+    private @interface RibbonMarginUnit{}
 
     /** @hide */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @IntDef({android.R.attr.colorPrimary, android.R.attr.colorAccent, android.R.attr.textColorPrimary, android.R.attr.windowBackground})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ValidColorAttrIds{}
+    private @interface ValidColorAttrIds{}
 
 
     /*************************************Viewable views*******************************************/
@@ -421,6 +421,8 @@ public class ProgressRibbon extends FrameLayout {
             ribbonData.ribbonPaddingTop =a.getDimensionPixelSize(R.styleable.ProgressRibbon_ribbonPadding, ribbonData.DEFAULT_RIBBON_PADDING);
             ribbonData.ribbonPaddingBottom =a.getDimensionPixelSize(R.styleable.ProgressRibbon_ribbonPadding, ribbonData.DEFAULT_RIBBON_PADDING);
             ribbonData.reportProgressAsMaxPercent=a.getBoolean(R.styleable.ProgressRibbon_reportProgressAsMaxPercent, false);
+            ribbonData.isTransparent=a.getBoolean(R.styleable.ProgressRibbon_transparent, false);
+            ribbonData.isBorderless=a.getBoolean(R.styleable.ProgressRibbon_borderless, false);
 
             float defaultElevationPixelSize= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ribbonData.DEFAULT_RIBBON_BORDER_SIZE, getResources().getDisplayMetrics());
             int elevationPixelSize= a.getDimensionPixelSize(R.styleable.ProgressRibbon_ribbonElevation, Math.round(defaultElevationPixelSize));
@@ -667,9 +669,9 @@ public class ProgressRibbon extends FrameLayout {
 
         //Create a ProgressBar
         initProgressbar(ribbonData.progressBarStyle, ribbonData.isIndeterminate);
-
-        //Set the background and text attributes
         setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+        //Set the text attributes
         setProgressTextColour(ribbonData.progressTextColor);
         setProgressTextSize(TypedValue.COMPLEX_UNIT_PX, ribbonData.progressTextSize);
         setRibbonTextPosition(ribbonData.textBesideBar ? TEXT_BESIDE_BAR:TEXT_UNDER_BAR);
@@ -678,8 +680,6 @@ public class ProgressRibbon extends FrameLayout {
         setMin(ribbonData.min);
         setMax(ribbonData.max);
 
-        //Does what it says, but does it in a version agnostic manner (works on pre-lollipop too)
-        setElevation(ribbonData.ribbonElevation);
 
         /**
          * Set the ribbon to be either a real ribbon, or to resemble a dialogue
@@ -687,7 +687,6 @@ public class ProgressRibbon extends FrameLayout {
          * so those do not mneed to be called separately
          */
         setRibbonInDialogueMode(ribbonData.isInDialogueMode);
-
 
 
         //Set margins and paddings
@@ -732,6 +731,19 @@ public class ProgressRibbon extends FrameLayout {
                 return true;
             }
         });
+
+
+        if(ribbonData.isTransparent){
+            setRibbonTransparent();
+        } else {
+            //Does what it says, but does it in a version agnostic manner (works on pre-lollipop too)
+            setElevation(ribbonData.ribbonElevation);
+        }
+
+
+        if(ribbonData.isBorderless){
+            setRibbonBorderless();
+        }
 
         //If coming from state restore, we need to re-show the ribbon, without any applicable delay
         if(fromRestoreState && isShowing){
@@ -784,7 +796,7 @@ public class ProgressRibbon extends FrameLayout {
                 constraintSet.connect(this.getId(), ConstraintSet.BOTTOM, viewParent.getId(), ConstraintSet.BOTTOM, 0);
                 constraintSet.applyTo((ConstraintLayout) viewParent);
                 */
-        } else if (viewParent instanceof ViewGroup){
+        } else if (viewParent != null){
             /*Note: You will probably need to do some magic to be able to center the Ribbon in the parent view, if you change the height/width here*/
             ViewGroup.LayoutParams params= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             setLayoutParams(params);
@@ -952,8 +964,7 @@ public class ProgressRibbon extends FrameLayout {
      * @return <p></p>int array of padding with <code>[0]</code> representing {@link RibbonData#ribbonPaddingTop} and <code>[1]</code> representing {@link RibbonData#ribbonPaddingBottom} in {@link TypedValue#COMPLEX_UNIT_DIP}</p>
      */
     public int[] getRibbonPadding(){
-        int[] result= {Math.round(ribbonData.ribbonPaddingTop / getResources().getDisplayMetrics().density),  Math.round(ribbonData.ribbonPaddingBottom/ getResources().getDisplayMetrics().density)};
-        return result;
+        return new int[]{Math.round(ribbonData.ribbonPaddingTop / getResources().getDisplayMetrics().density),  Math.round(ribbonData.ribbonPaddingBottom/ getResources().getDisplayMetrics().density)};
     }
 
     /**
@@ -1233,7 +1244,7 @@ public class ProgressRibbon extends FrameLayout {
      */
     private ProgressRibbon setRibbonBorderSize(){
 
-        int sidePadding=0;
+        int sidePadding;
         if(ribbonData.isInDialogueMode){
             ((GradientDrawable) ribbonContainer.getBackground()).setStroke(ribbonData.ribbonBorderSize, ribbonData.ribbonBorderColor);
             sidePadding=ribbonData.ribbonBorderSize;
@@ -1357,6 +1368,7 @@ public class ProgressRibbon extends FrameLayout {
      */
     private ProgressRibbon setRibbonBackgroundColor(){
         Drawable bg= ribbonContainer.getBackground();
+
         if(ribbonData.isInDialogueMode) {
             ((GradientDrawable)bg).setColor(ribbonData.backgroundColor);
             ribbonContainer.setBackground(bg);
@@ -1419,7 +1431,7 @@ public class ProgressRibbon extends FrameLayout {
         if(ribbonData.isInDialogueMode){
             GradientDrawable bg = (GradientDrawable) ribbonContainer.getBackground();
             bg.setCornerRadius(ribbonData.ribbonBorderRadius);
-            //ribbonContainer.setBackground(bg);
+
             /**
              * On pre-Lollipop devices too big radius can cause overlap with bar style view, a larger top padding is advisable
              */
@@ -1479,12 +1491,41 @@ public class ProgressRibbon extends FrameLayout {
      * @return The {@link ProgressRibbon} object, for method chaining
      */
     public ProgressRibbon setRibbonTransparent(){
-        ribbonData.backgroundColor= Color.TRANSPARENT;
-        ribbonData.ribbonBorderColor =Color.TRANSPARENT;
-        setBorderColor(Color.TRANSPARENT);
-        setRibbonBackgroundColor();
+
+        ribbonData.isTransparent=true;
+        ribbonData.ribbonBorderColor = Color.TRANSPARENT;
+        ribbonData.backgroundColor = Color.TRANSPARENT;
+
+        return setRibbonBorders();
+    }
+
+    /**
+     * <p>Check if {@link ProgressRibbon} is ste to transparent</p>
+     * @return boolean whether {@link ProgressRibbon} is transparent
+     */
+    public boolean isTransparent(){
+        return ribbonData.isTransparent;
+    }
+
+    /**
+     * <p>Shortcut method to hide all the borders without having to set its colours</p>
+     *
+     * @return The {@link ProgressRibbon} object, for method chaining
+     */
+    public ProgressRibbon setRibbonBorderless(){
+        ribbonData.ribbonBorderSize=0;
+
         return setRibbonBorderSize();
     }
+
+    /**
+     * Check if {@link ProgressRibbon} is ste to borderless
+     * @return boolean hether {@link ProgressRibbon} is borderless
+     */
+    public boolean isBorderless(){
+        return ribbonData.isBorderless;
+    }
+
 
     /**
      * <p>Set text colour for the progress text as a {@link ColorInt}</p>
@@ -1578,7 +1619,7 @@ public class ProgressRibbon extends FrameLayout {
      *                    or {@link ProgressRibbon#UNFREEZE_PROGRESS} ({@value ProgressRibbon#FREEZE_PROGRESS})
      * @return The {@link ProgressRibbon} object, for method chaining
      */
-    public ProgressRibbon setFrozenState(@ProgressFrozen int frozenState){
+    private ProgressRibbon setFrozenState(@ProgressFrozen int frozenState){
         this.isProgressFrozen = (frozenState>0);
         if(ribbonStateChangeListener !=null) {
             if (isProgressFrozen) {
@@ -1750,7 +1791,7 @@ public class ProgressRibbon extends FrameLayout {
      * @param elevation the elevaton value in {@link TypedValue#COMPLEX_UNIT_DIP}
      * @return The {@link ProgressRibbon} object, for method chaining
      */
-    public ProgressRibbon setRibbonElevationInternal(@FloatRange(from=0) float elevation){
+    private ProgressRibbon setRibbonElevationInternal(@FloatRange(from = 0) float elevation){
 
         ribbonData.ribbonElevation=elevation;
 
@@ -1781,8 +1822,7 @@ public class ProgressRibbon extends FrameLayout {
      */
     private int getConfigLayoutDirection(){
         final Configuration config = getResources().getConfiguration();
-        int configLayoutDirection= config.getLayoutDirection();
-        return configLayoutDirection;
+        return config.getLayoutDirection();
     }
 
     /**
@@ -2170,7 +2210,7 @@ public class ProgressRibbon extends FrameLayout {
             ribbonContainer.setOrientation(LinearLayout.HORIZONTAL);
             barParams.gravity=Gravity.START;
             textPaddingTop=0;
-            textPaddingEnd=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 72, getResources().getDisplayMetrics());;
+            textPaddingEnd=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 72, getResources().getDisplayMetrics());
         }
 
         progressTextView.setPaddingRelative(0, textPaddingTop, textPaddingEnd,0);
@@ -2427,7 +2467,6 @@ public class ProgressRibbon extends FrameLayout {
      */
     private Handler showHandler;
     private Runnable runner;
-    private Handler hideHandler;
 
     /**
      * <p>Combined internal function to make the {@link ProgressRibbon} appear (with a delay if a delay is set), and if not yet attached,
@@ -2513,7 +2552,7 @@ public class ProgressRibbon extends FrameLayout {
      *
      * @param delay show delay in millisec
      */
-    public void show(@IntRange(from=0) int delay){
+    public void show(@IntRange(from = 0) int delay){
 
         setVisibility(View.GONE);
 
@@ -2559,11 +2598,11 @@ public class ProgressRibbon extends FrameLayout {
      *
      * @param delay hide delay in millisec
      */
-    public void hide(@IntRange(from=0) int delay) {
+    public void hide(@IntRange(from = 0) int delay) {
 
         if (delay > 0) {
 
-            hideHandler = new Handler();
+            Handler hideHandler = new Handler();
             hideHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -2649,7 +2688,7 @@ public class ProgressRibbon extends FrameLayout {
     /**
      * Identifier for the state of the super class.
      */
-    private static String STATE_SUPER_CLASS = "SuperClass";
+    private static final String STATE_SUPER_CLASS = "SuperClass";
 
     /**
      * The usual business. Put everything in a bundle
@@ -2658,10 +2697,6 @@ public class ProgressRibbon extends FrameLayout {
     @Override
     public Bundle onSaveInstanceState() {
         Bundle bundle = new Bundle();
-
-
-        Log.e("PR", "saving instance state");
-
 
         bundle.putParcelable(STATE_SUPER_CLASS,
                 super.onSaveInstanceState());
@@ -2700,6 +2735,8 @@ public class ProgressRibbon extends FrameLayout {
         bundle.putBoolean("animationInProgress", animationInProgress);
         bundle.putBoolean("layoutIsRTL", layoutIsRTL);
         bundle.putBoolean("isShowing", isShowing);
+        bundle.putBoolean("isBorderless", ribbonData.isBorderless);
+        bundle.putBoolean("isTransparent", ribbonData.isTransparent);
         bundle.putBoolean("doNotShowOnAttachFromXML", doNotShowOnAttachFromXML);
 
         return bundle;
@@ -2713,9 +2750,6 @@ public class ProgressRibbon extends FrameLayout {
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle)state;
-
-
-            Log.e("PR", "restoring instance state");
 
             super.onRestoreInstanceState(bundle
                     .getParcelable(STATE_SUPER_CLASS));
@@ -2754,6 +2788,8 @@ public class ProgressRibbon extends FrameLayout {
             animationInProgress=bundle.getBoolean("animationInProgress");
             layoutIsRTL=bundle.getBoolean("layoutIsRTL");
             isShowing=bundle.getBoolean("isShowing");
+            ribbonData.isBorderless=bundle.getBoolean("isBorderless");
+            ribbonData.isTransparent=bundle.getBoolean("isTransparent");
             doNotShowOnAttachFromXML=bundle.getBoolean("doNotShowOnAttachFromXML");
 
             setRibbonAttributes(true);
@@ -2965,6 +3001,8 @@ public class ProgressRibbon extends FrameLayout {
         private boolean textBesideBar;
         private boolean marginIsPercentage;
         private boolean reportProgressAsMaxPercent;
+        private boolean isBorderless;
+        private boolean isTransparent;
 
         public RibbonData(Context context, boolean setDefaults){
 
@@ -3080,7 +3118,7 @@ public class ProgressRibbon extends FrameLayout {
         /**
          * Set those defaults, where defaults need setting
          */
-        public void applyDefaults(){
+        void applyDefaults(){
 
             min = DEFAULT_RIBBON_MIN;
             progress = min;
@@ -3109,6 +3147,8 @@ public class ProgressRibbon extends FrameLayout {
             isInDialogueMode=false;
             marginIsPercentage=false;
             reportProgressAsMaxPercent=false;
+            isBorderless=false;
+            isTransparent=false;
         }
     }
 }
