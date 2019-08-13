@@ -20,7 +20,7 @@
  * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gitlab.atlanticomnibus.progressribbon;
+package com.atlanticomnibus.progressribbon;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -71,6 +71,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
+
+import com.gitlab.atlanticomnibus.progressribbon.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

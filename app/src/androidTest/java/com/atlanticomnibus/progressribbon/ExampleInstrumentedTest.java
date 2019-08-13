@@ -1,4 +1,4 @@
-package com.gitlab.atlanticomnibus.progressribbon;
+package com.atlanticomnibus.progressribbon;
 
 import android.content.Context;
 
