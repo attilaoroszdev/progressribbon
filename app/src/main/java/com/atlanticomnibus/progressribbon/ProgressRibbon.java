@@ -23,6 +23,7 @@
 package com.atlanticomnibus.progressribbon;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
@@ -72,7 +73,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
-import com.gitlab.atlanticomnibus.progressribbon.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -405,12 +405,11 @@ public class ProgressRibbon extends FrameLayout {
             progressText=a.getString(R.styleable.ProgressRibbon_progressText);
             ribbonData.showDelay=a.getInteger(R.styleable.ProgressRibbon_showDelay, ribbonData.DEFAULT_RIBBON_SHOW_DELAY);
             ribbonData.hideDelay=a.getInteger(R.styleable.ProgressRibbon_hideDelay, ribbonData.DEFAULT_RIBBON_HIDE_DELAY);
-            ribbonData.ribbonBorderColor =a.getColor(R.styleable.ProgressRibbon_borderColor, ribbonData.DEFAULT_RIBBON_BORDER_COLOR);
+
             ribbonData.isIndeterminate=a.getBoolean(R.styleable.ProgressRibbon_isIndeterminate, true);
             ribbonData.min=a.getInteger(R.styleable.ProgressRibbon_min, ribbonData.DEFAULT_RIBBON_MIN);
             ribbonData.max=a.getInteger(R.styleable.ProgressRibbon_max, ribbonData.DEFAULT_RIBBON_MAX);
             ribbonData.progress=a.getInteger(R.styleable.ProgressRibbon_ribbonProgress, 0);
-            ribbonData.backgroundColor=a.getColor(R.styleable.ProgressRibbon_ribbonBackgroundColor,ribbonData.DEFAULT_RIBBON_BG_COLOR);
             ribbonData.blocksUnderlying =a.getBoolean(R.styleable.ProgressRibbon_blockUnderlyingViews, false);
             ribbonData.progressBarStyle =a.getInteger(R.styleable.ProgressRibbon_progressBarType, BAR_ROUND);
             ribbonData.animationDuration=a.getInteger(R.styleable.ProgressRibbon_animationDuration, ribbonData.DEFAULT_ANIMATION_DURATION);
@@ -423,7 +422,16 @@ public class ProgressRibbon extends FrameLayout {
             ribbonData.ribbonPaddingTop =a.getDimensionPixelSize(R.styleable.ProgressRibbon_ribbonPadding, ribbonData.DEFAULT_RIBBON_PADDING);
             ribbonData.ribbonPaddingBottom =a.getDimensionPixelSize(R.styleable.ProgressRibbon_ribbonPadding, ribbonData.DEFAULT_RIBBON_PADDING);
             ribbonData.reportProgressAsMaxPercent=a.getBoolean(R.styleable.ProgressRibbon_reportProgressAsMaxPercent, false);
-            ribbonData.isTransparent=a.getBoolean(R.styleable.ProgressRibbon_transparent, false);
+            boolean isTransparent=a.getBoolean(R.styleable.ProgressRibbon_transparent, false);
+
+            if(!isTransparent){
+                ribbonData.ribbonBorderColor =a.getColor(R.styleable.ProgressRibbon_borderColor, ribbonData.DEFAULT_RIBBON_BORDER_COLOR);
+                ribbonData.backgroundColor=a.getColor(R.styleable.ProgressRibbon_ribbonBackgroundColor,ribbonData.DEFAULT_RIBBON_BG_COLOR);
+            } else {
+                ribbonData.ribbonBorderColor = Color.TRANSPARENT;
+                ribbonData.backgroundColor = Color.TRANSPARENT;
+            }
+
             ribbonData.isBorderless=a.getBoolean(R.styleable.ProgressRibbon_borderless, false);
 
             float defaultElevationPixelSize= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ribbonData.DEFAULT_RIBBON_BORDER_SIZE, getResources().getDisplayMetrics());
@@ -492,7 +500,7 @@ public class ProgressRibbon extends FrameLayout {
     }
 
     /**
-     * <p>Inflates {@link ProgressRibbon} compound {@link View}s from their default layout file {@link com.gitlab.atlanticomnibus.progressribbon.R.layout#progress_ribbon}</p>
+     * <p>Inflates {@link ProgressRibbon} compound {@link View}s from their default layout file {@link com.atlanticomnibus.progressribbon.R.layout#progress_ribbon}</p>
      *
      * @param context Of the many meanings of the word "context", I'll let you choose the one that suits this here
      */
@@ -734,14 +742,8 @@ public class ProgressRibbon extends FrameLayout {
             }
         });
 
-
-        if(ribbonData.isTransparent){
-            setRibbonTransparent();
-        } else {
             //Does what it says, but does it in a version agnostic manner (works on pre-lollipop too)
-            setElevation(ribbonData.ribbonElevation);
-        }
-
+        setElevation(ribbonData.ribbonElevation);
 
         if(ribbonData.isBorderless){
             setRibbonBorderless();
@@ -1494,7 +1496,6 @@ public class ProgressRibbon extends FrameLayout {
      */
     public ProgressRibbon setRibbonTransparent(){
 
-        ribbonData.isTransparent=true;
         ribbonData.ribbonBorderColor = Color.TRANSPARENT;
         ribbonData.backgroundColor = Color.TRANSPARENT;
 
@@ -1506,7 +1507,7 @@ public class ProgressRibbon extends FrameLayout {
      * @return boolean whether {@link ProgressRibbon} is transparent
      */
     public boolean isTransparent(){
-        return ribbonData.isTransparent;
+        return (ribbonData.ribbonBorderColor == Color.TRANSPARENT && ribbonData.backgroundColor == Color.TRANSPARENT);
     }
 
     /**
@@ -2418,8 +2419,8 @@ public class ProgressRibbon extends FrameLayout {
         }
 
         animatorSet.setDuration(ribbonData.animationDuration);
-        animatorSet.addListener(new Animator.AnimatorListener() {
 
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animator) {
                 setVisibility(View.VISIBLE);
@@ -2428,7 +2429,6 @@ public class ProgressRibbon extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animator animatior) {
-
                 if(animationDirection==ANIMATION_HIDE){
                     isShowing=false;
                     ProgressRibbon.this.setVisibility(View.GONE);
@@ -2441,21 +2441,13 @@ public class ProgressRibbon extends FrameLayout {
                         ribbonStateChangeListener.onRibbonShow();
                     }
                 }
-
                 /*Leave everything as we found it, for the next guy*/
                 ProgressRibbon.this.setAlpha(1.0f);
                 ProgressRibbon.this.setScaleX(1.0f);
                 ProgressRibbon.this.setScaleY(1.0f);
-
                 animatior.cancel();
                 animationInProgress=false;
             }
-
-            @Override
-            public void onAnimationRepeat(Animator animatior) {}
-
-            @Override
-            public void onAnimationCancel(Animator animatior) {}
         });
         animatorSet.start();
         return this;
@@ -2738,7 +2730,6 @@ public class ProgressRibbon extends FrameLayout {
         bundle.putBoolean("layoutIsRTL", layoutIsRTL);
         bundle.putBoolean("isShowing", isShowing);
         bundle.putBoolean("isBorderless", ribbonData.isBorderless);
-        bundle.putBoolean("isTransparent", ribbonData.isTransparent);
         bundle.putBoolean("doNotShowOnAttachFromXML", doNotShowOnAttachFromXML);
 
         return bundle;
@@ -2791,7 +2782,6 @@ public class ProgressRibbon extends FrameLayout {
             layoutIsRTL=bundle.getBoolean("layoutIsRTL");
             isShowing=bundle.getBoolean("isShowing");
             ribbonData.isBorderless=bundle.getBoolean("isBorderless");
-            ribbonData.isTransparent=bundle.getBoolean("isTransparent");
             doNotShowOnAttachFromXML=bundle.getBoolean("doNotShowOnAttachFromXML");
 
             setRibbonAttributes(true);
@@ -3004,7 +2994,6 @@ public class ProgressRibbon extends FrameLayout {
         private boolean marginIsPercentage;
         private boolean reportProgressAsMaxPercent;
         private boolean isBorderless;
-        private boolean isTransparent;
 
         public RibbonData(Context context, boolean setDefaults){
 
@@ -3150,7 +3139,6 @@ public class ProgressRibbon extends FrameLayout {
             marginIsPercentage=false;
             reportProgressAsMaxPercent=false;
             isBorderless=false;
-            isTransparent=false;
         }
     }
 }
